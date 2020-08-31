@@ -13,18 +13,26 @@ function App() {
     api.get('/repositories').then( response => {
       setRepositories(response.data);
     });
-  }, [handleRemoveRepository]);
+  }, []);
 
   async function handleAddRepository() {
     const response = await api.post('repositories', {
-      title: '',
-      url: '',
-      techs: '',
+      title: 'Título do projeto',
+      url: 'http://www.github.com',
+      techs: ["javascript", "typescript"],
     });
+
+    setRepositories([...repositories, response.data ]);
   }
 
   async function handleRemoveRepository(id) {
-    const response = await api.delete(`/repositories/${id}`, {});
+    await api.delete(`/repositories/${id}`);
+
+    const setFilter = repositories.filter(
+      repository => repository.id !== id
+    );
+
+    setRepositories(setFilter)
   }
 
   return (
